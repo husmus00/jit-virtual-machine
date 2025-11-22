@@ -152,6 +152,7 @@ void op_dup(struct vm_state* state) {
 void op_prt(struct vm_state* state) {
     int val = pop_val(state);
     printf("PRINT: %d\n", val);
+    push_val(state, val);
     dbg("Executed PRT\n");
 }
 
