@@ -1,3 +1,5 @@
+# Stack-Based VM w/ JIT
+
 (Currently W.I.P)
 
 A stack-based bytecode VM with multi-arch JIT compilation 
