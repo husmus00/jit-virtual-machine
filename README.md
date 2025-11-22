@@ -12,13 +12,13 @@ Instruction set:
 
 - ADD
 - SUB
-- PSH?
-- POP?
-- STR?
-- LOD
-- DUP (because we often consume values)
-- PRT (Output, but consume or from var?)
-- ASC (Output in ASCII mode?)
+- PSH
+- POP
+- STR ; Store
+- LOD ; Load
+- DUP 
+- PRT ; Print value
+- ASC ; Print in ASCII mode
 - INC
 - ; for comments
 - @ for addresses
