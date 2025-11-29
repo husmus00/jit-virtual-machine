@@ -6,6 +6,7 @@ A stack-based bytecode VM with multi-arch JIT compilation. The example Fibonacci
 
 Features:
 - Function calls with frame stack
+- Global memory and per-frame local memory
 
 W.I.P features:
 - Tagged Objects
