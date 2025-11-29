@@ -4,6 +4,8 @@ A stack-based bytecode VM with multi-arch JIT compilation. The example Fibonacci
 
 <img width="500" height="310" alt="image" src="https://github.com/user-attachments/assets/8e2d0e12-b371-46fd-94bb-5ffba8670469" />
 
+Features:
+- Function calls with frame stack
 
 W.I.P features:
 - Tagged Objects
@@ -11,6 +13,7 @@ W.I.P features:
 
 Instruction set:
 
+```
 - ADD
 - SUB
 - PSH
@@ -21,5 +24,9 @@ Instruction set:
 - PRT ; Print value
 - ASC ; Print in ASCII mode
 - INC
+- JMP
+- CAL
+- RET
 - ; for comments
 - @ for addresses
+```
