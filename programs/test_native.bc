@@ -1,0 +1,6 @@
+PSH 1
+@LOOP
+PRT
+PSH 1
+JIT
+JMP @LOOP

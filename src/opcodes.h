@@ -13,5 +13,6 @@
 #define OP_JMP 0x09 // Jump
 #define OP_CAL 0x10 // Call
 #define OP_RET 0x11 // Return
+#define OP_JIT 0x12 // JIT for testing
 
 #endif // OPCODES_H

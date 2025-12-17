@@ -15,7 +15,7 @@ int register_jump_address(vm_state* state, char* line, int address_counter) {
     char label_name[LABEL_MAX_LENGTH];
     sscanf(line + 3, "%s", label_name);
     int label_address = -1;
-    get_label_address(state->address_table, address_counter, label_name, &label_address);
+    get_label_address(state->jump_table, address_counter, label_name, &label_address);
     if (label_address == -1) {
         printf("Error: Undefined label %s\n", label_name);
         printf("Aborting.\n");
@@ -58,6 +58,9 @@ int assemble_bytecode(char* program, vm_state* state) {
         } else if (op_matches(line, "SUB")) {
             state->bytecode[i] = OP_SUB;
             print_opcode(line_number, OP_SUB, "SUB");
+        } else if (op_matches(line, "JIT")) {
+            state->bytecode[i] = OP_JIT;
+            print_opcode(line_number, OP_JIT, "JIT");
         } else if (op_matches(line, "POP")) {
             state->bytecode[i] = OP_POP;
             print_opcode(line_number, OP_POP, "POP");
@@ -85,12 +88,12 @@ int assemble_bytecode(char* program, vm_state* state) {
 
         } else if (strncmp(line, "@", 1) == 0) {
             print_label(line_number, line);
-            state->address_table[address_counter].address = i;
-            strcpy(state->address_table[address_counter].name, line);
+            state->jump_table[address_counter].address = i;
+            strcpy(state->jump_table[address_counter].name, line);
             address_counter++;
             i--; // Labels do not consume bytecode space
 
-        } else if (strncmp(line, ".", 1 == 0)) {
+        } else if (strncmp(line, ".", 1) == 0) {
 
 
         } else {
@@ -107,13 +110,13 @@ int assemble_bytecode(char* program, vm_state* state) {
     return 0;
 }
 
-void get_label_address(struct label* address_table, int address_counter, char* label_name, int* address) {
+void get_label_address(struct label* jump_table, int address_counter, char* label_name, int* address) {
     for (int i = 0; i < address_counter; i++) {
-        if (strcmp(address_table[i].name, label_name) == 0) {
+        if (strcmp(jump_table[i].name, label_name) == 0) {
             if (DEBUG) {
-                printf("Returning label address %d", address_table[i].address);
+                printf("Returning label address %d", jump_table[i].address);
             }
-            *address = address_table[i].address;
+            *address = jump_table[i].address;
             return;
         }
     }

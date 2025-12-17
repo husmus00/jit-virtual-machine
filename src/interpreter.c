@@ -2,17 +2,20 @@
 
 #include "config.h"
 #include "opcodes.h"
+#include "jit.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/mman.h>
+#include <string.h>
 
 
-void print_address_table(vm_state* state) {
+void print_jump_table(vm_state* state) {
     printf("\nAddress Table:\n");
     for (int i = 0; i < PROGRAM_SIZE; i++) {
-        if (state->address_table[i].address != -1) {
-            printf("Label %s at address %d\n", state->address_table[i].name, state->address_table[i].address);
+        if (state->jump_table[i].address != -1) {
+            printf("Label %s at address %d\n", state->jump_table[i].name, state->jump_table[i].address);
         }
     }
 }
@@ -20,7 +23,7 @@ void print_address_table(vm_state* state) {
 void print_state(vm_state* state) {
 
     // Print address table
-    print_address_table(state);
+    print_jump_table(state);
     printf("\n");
 
     // Print bytecode
@@ -60,6 +63,7 @@ void interpret_bytecode(vm_state* state) {
     opcodes[OP_JMP] = op_jmp;
     opcodes[OP_CAL] = op_cal;
     opcodes[OP_RET] = op_ret;
+    opcodes[OP_JIT] = native_test;
 
     while (state->ip < PROGRAM_SIZE) {
 
@@ -86,7 +90,7 @@ void interpret_bytecode(vm_state* state) {
         }
 
         // getchar();
-        usleep(20000); // 20ms
+        //usleep(20000); // 20ms
 
         if (DEBUG) {
             print_state(state);
@@ -136,7 +140,7 @@ void store_local(vm_state* state, int value) {
 }
 
 int load_local(vm_state* state) {
-
+    return 0;
 }
 
 /* ==----- Opcodes -----== */
