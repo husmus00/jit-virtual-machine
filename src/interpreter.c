@@ -13,7 +13,7 @@
 
 void print_jump_table(vm_state* state) {
     printf("\nAddress Table:\n");
-    for (int i = 0; i < PROGRAM_SIZE; i++) {
+    for (int i = 0; i < JUMP_TABLE_SIZE; i++) {
         if (state->jump_table[i].address != -1) {
             printf("Label %s at address %d\n", state->jump_table[i].name, state->jump_table[i].address);
         }
@@ -90,7 +90,7 @@ void interpret_bytecode(vm_state* state) {
         }
 
         // getchar();
-        //usleep(20000); // 20ms
+        usleep(100000); // 100ms
 
         if (DEBUG) {
             print_state(state);

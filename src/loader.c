@@ -8,7 +8,7 @@
 
 int load_program(char* program_buffer, char* file_name)
 {
-	printf("Loading program...\n");
+	printf("LOAD: Loading program...\n");
 	FILE* fp = fopen(file_name, "r");
 	if (fp == NULL) {
 		perror("Error opening file");
@@ -21,8 +21,6 @@ int load_program(char* program_buffer, char* file_name)
 
 	fread(program_buffer, 1, fsize, fp);
 	program_buffer[fsize] = 0;
-
-	printf("Program loaded\n");
 	
 	if (DEBUG) {
 		printf("%s\n", program_buffer);

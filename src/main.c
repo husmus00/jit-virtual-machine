@@ -9,53 +9,61 @@
 #include <stdlib.h>
 #include <string.h>
 
+int setup_state(vm_state* state) {
+    memset(state, 0, sizeof(state));
+    memset(state->native_funcs, -1, sizeof(state->native_funcs));
+    memset(state->stack, STACK_NULL, sizeof(state->stack));
+
+    // Set jump table addresses to -1 (meaning not set)
+    for (int i = 0; i < JUMP_TABLE_SIZE; i++) {
+        state->jump_table[i].address = -1;
+    }
+
+    state->sp = -1; // TODO: Should start from 0
+}
+
+int setup_initial_frame(vm_state* state) {
+    // Set up initial frame
+    frame* main_frame = malloc(sizeof(frame));
+    main_frame->label = "MAIN";
+
+    state->fp = 0;
+    state->frame_stack[state->fp] = main_frame;
+
+    // Check if MAIN entry point exists
+    for (int i = 0; i < JUMP_TABLE_SIZE; i++) {
+        if (strncmp(state->jump_table[i].name, "@MAIN", 4) == 0) {
+            state->ip = state->jump_table[i].address;
+            break;
+        }
+    }
+}
 
 int main() {
 
     // Define state
-
-    char program[PROGRAM_SIZE];
-    //int bytecode[PROGRAM_SIZE];
-    //struct label jump_table[PROGRAM_SIZE];
-
     vm_state state;
-
-    memset(&state, 0, sizeof(state));
-    memset(state.jump_table, -1, sizeof(state.jump_table));
-    memset(state.stack, STACK_NULL, sizeof(state.stack));
-
-    state.sp = -1;
+    setup_state(&state);
+    printf("MAIN: State setup complete.\n");
 
     // Load program
+    char program[PROGRAM_SIZE];
     char* file_name = "programs/test_native.bc";
     load_program(program, file_name);
 
     // Assemble to bytecode
-    printf("\nAssembling Bytecode...\n");
     assemble_bytecode(program, &state);
-    // print_bytecode(bytecode);
-    // print_jump_table(jump_table);
+    printf("MAIN: Bytecode assembled.\n");
+    //print_bytecode(bytecode);
+    //print_jump_table(jump_table);
 
-    // Set up initial frame
-    frame main_frame;
-    main_frame.label = "MAIN";
-
-    state.fp = 0;
-    state.frame_stack[state.fp] = &main_frame;
-
-    // Check if MAIN entry point exists
-    for (int i = 0; i < JUMP_TABLE_SIZE; i++) {
-        if (strncmp(state.jump_table[i].name, "@MAIN", 4) == 0) {
-            state.ip = state.jump_table[i].address;
-            break;
-        }
-    }
-
-    emit_native_add(&state);
+    setup_initial_frame(&state);
+	printf("MAIN: Program loaded\n");
 
     // Run program
     printf("\nRunning Bytecode...\n");
     interpret_bytecode(&state);
+
 
        
     return 0;

@@ -9,7 +9,7 @@ typedef struct frame frame;
 struct frame{
     int local_mem[MEM_SIZE];                  // Local per function memory
     int return_address;
-    char* label;                              // Points to label in address table
+    char* label;                              // Points to label in jump table
 };
 
 typedef struct vm_state vm_state;
@@ -24,7 +24,7 @@ struct vm_state {
     frame* frame_stack[STACK_SIZE];     // Frame stack
     int fp;                             // Frame Pointer
     // Some object store?
-    void* native_code[JUMP_TABLE_SIZE];  // Pointers to native functions
+    void* native_funcs[JUMP_TABLE_SIZE];  // Pointers to native functions
 };
 
 void interpret_bytecode(vm_state* state);
