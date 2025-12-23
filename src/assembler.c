@@ -34,7 +34,7 @@ int assemble_bytecode(char* program, vm_state* state) {
         if (op_matches(line, "PSH")) {
             state->bytecode[i] = OP_PSH;
             int value = atoi(line + 4);
-            state->bytecode[++i] = (char)value;
+            state->bytecode[++i] = value;
             print_opcode_with_arg(line_number, OP_PSH, "PSH", value);
         } else if (op_matches(line, "DUP")) {
             state->bytecode[i] = OP_DUP;
@@ -127,7 +127,7 @@ void print_opcode(int line_number, int opcode, char* name) {
     if (DEBUG) {
         char fmt_line_number[12];
         sprintf(fmt_line_number, "%03d", line_number);
-        printf("LINE %s: Opcode %d (%s)\n", fmt_line_number, opcode, name);
+        printf("ASMB: LINE %s: Opcode %d (%s)\n", fmt_line_number, opcode, name);
     }
 }
 
@@ -135,7 +135,7 @@ void print_opcode_with_arg(int line_number, int opcode, char* name, int arg) {
     if (DEBUG) {
         char fmt_line_number[12];
         sprintf(fmt_line_number, "%03d", line_number);
-        printf("LINE %s: Opcode %d (%s %d)\n", fmt_line_number, opcode, name, arg);
+        printf("ASMB: LINE %s: Opcode %d (%s %d)\n", fmt_line_number, opcode, name, arg);
     }
 }
 
@@ -143,7 +143,7 @@ void print_label(int line_number, char* label) {
     if (DEBUG) {
         char fmt_line_number[12];
         sprintf(fmt_line_number, "%03d", line_number);
-        printf("LINE %s: Label %s\n", fmt_line_number, label);
+        printf("ASMB: LINE %s: Label %s\n", fmt_line_number, label);
     }
 }
 

@@ -1,6 +1,7 @@
 #include "interpreter.h"
 
 #include "config.h"
+#include "vm.h"
 #include "opcodes.h"
 #include "jit.h"
 
@@ -10,41 +11,6 @@
 #include <sys/mman.h>
 #include <string.h>
 
-
-void print_jump_table(vm_state* state) {
-    printf("\nAddress Table:\n");
-    for (int i = 0; i < JUMP_TABLE_SIZE; i++) {
-        if (state->jump_table[i].address != -1) {
-            printf("Label %s at address %d\n", state->jump_table[i].name, state->jump_table[i].address);
-        }
-    }
-}
-
-void print_state(vm_state* state) {
-
-    // Print address table
-    print_jump_table(state);
-    printf("\n");
-
-    // Print bytecode
-    printf("Bytecode: ");
-    for (int i = 0; i < 30; i++) {
-        printf("%02X ", (unsigned char)state->bytecode[i]);
-    }
-    printf("\n");
-
-    // Print stack
-    printf("Stack:    X ");
-    for (int i = 0; i < 30; i++) {
-        int entry = state->stack[i];
-        printf("%d ", entry);
-    }
-    printf("\n%*s\n", 13+(state->sp)*2, "^");
-
-    printf("Pointers: Instruction: %d, Stack %d\n", state->ip, state->sp);
-
-    printf("----END OP\n\n");
-}
 
 void interpret_bytecode(vm_state* state) {
 
@@ -93,7 +59,8 @@ void interpret_bytecode(vm_state* state) {
         usleep(100000); // 100ms
 
         if (DEBUG) {
-            print_state(state);
+            print_vm_state(state);
+            printf("----END OP\n\n");
         }
     }
 }

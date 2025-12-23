@@ -48,7 +48,7 @@ int main() {
 
     // Load program
     char program[PROGRAM_SIZE];
-    char* file_name = "programs/test_native.bc";
+    char* file_name = "programs/test_native_add.bc";
     load_program(program, file_name);
 
     // Assemble to bytecode
@@ -58,7 +58,12 @@ int main() {
     //print_jump_table(jump_table);
 
     setup_initial_frame(&state);
-	printf("MAIN: Program loaded\n");
+	printf("MAIN: Initial frame set.\n");
+
+    // TEST emission
+    native_test(&state);
+
+    return 0;
 
     // Run program
     printf("\nRunning Bytecode...\n");

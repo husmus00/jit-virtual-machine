@@ -1,6 +1,7 @@
 #include "jit.h"
 
 #include "config.h"
+#include "vm.h"
 #include "opcodes.h"
 #include "interpreter.h"
 #include "emit.h"
@@ -62,21 +63,21 @@ void write_native_code(void** native_address, unsigned char* machine_code,  size
 }
 
 void jit_compile(vm_state* state) {
-    unsigned char native_code[PROGRAM_SIZE];
-
-    size_t code_size = 0;
-    size_t snippet_size = 0;
-
-    emit_add(native_code + code_size, &snippet_size);
-    code_size += snippet_size;
-
-    emit_ret(native_code + code_size, &snippet_size);
-    code_size += snippet_size;
+    jitc jc;
+    memset(&jc, 0, sizeof(jitc));
+    jc.bytecode = &state->bytecode;
 
     if (DEBUG) {
-        printf("Contents of native_code after emission:");
-        for (int i = 0; i < code_size; i++) {
-            printf("%x, ", native_code[i]);
+        printf("Contents of bytecode before emission:\n");
+        print_bytecode(state);
+    }
+
+    emit_native_bytes(&jc);
+
+    if (DEBUG) {
+        printf("Contents of native_code after emission:\n");
+        for (int i = 0; i < jc.native_size; i++) {
+            printf("%x, ", jc.native_code[i]);
         }
         printf("\n");
     }
@@ -85,7 +86,7 @@ void jit_compile(vm_state* state) {
 
     //printf("Native address before: %p\n", state->native_funcs[NATIVE_ADD]);
 
-    write_native_code(&state->native_funcs[NATIVE_ADD], native_code, code_size);
+    write_native_code(&state->native_funcs[NATIVE_ADD], jc.native_code, jc.native_size);
 
     //printf("Native address after: %p\n", state->native_funcs[NATIVE_ADD]);
 }
@@ -102,8 +103,11 @@ void native_test(vm_state* state) {
     state->sp = result - state->stack;
 
     if (DEBUG) {
-        printf("Return from native add is: %p\n", result);
+        printf("Stack address returned from native add is: %p\n", result);
+        printf("Val at stack head is %d\n", state->stack[0]);
     }
+
+    return;
 }
 
 
