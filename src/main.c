@@ -15,7 +15,7 @@ int setup_state(vm_state* state) {
     memset(state->stack, STACK_NULL, sizeof(state->stack));
 
     // Set jump table addresses to -1 (meaning not set)
-    for (int i = 0; i < JUMP_TABLE_SIZE; i++) {
+    for (int i = 0; i < FUNC_TABLE_SIZE; i++) {
         state->jump_table[i].address = -1;
     }
 
@@ -31,7 +31,7 @@ int setup_initial_frame(vm_state* state) {
     state->frame_stack[state->fp] = main_frame;
 
     // Check if MAIN entry point exists
-    for (int i = 0; i < JUMP_TABLE_SIZE; i++) {
+    for (int i = 0; i < FUNC_TABLE_SIZE; i++) {
         if (strncmp(state->jump_table[i].name, "@MAIN", 4) == 0) {
             state->ip = state->jump_table[i].address;
             break;
@@ -48,7 +48,7 @@ int main() {
 
     // Load program
     char program[PROGRAM_SIZE];
-    char* file_name = "programs/test_native_add.bc";
+    char* file_name = "programs/test_native_str.bc";
     load_program(program, file_name);
 
     // Assemble to bytecode
@@ -68,8 +68,6 @@ int main() {
     // Run program
     printf("\nRunning Bytecode...\n");
     interpret_bytecode(&state);
-
-
        
     return 0;
 }

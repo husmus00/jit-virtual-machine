@@ -22,7 +22,7 @@ struct jitc{
 // Step 1: Define the function pointer type
 typedef void (*emit_function)(jitc* jc);
 
-typedef int* (*NativeFunc)(int*); // Takes the stack pointer (is that all it needs?)
+typedef int* (*NativeFunc)(int*, void*, void*); // Takes the stack pointer, global/local memory pointer, and helper function array
 
 
 void native_test(vm_state* state);

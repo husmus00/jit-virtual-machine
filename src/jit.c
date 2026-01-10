@@ -13,6 +13,14 @@
 #include <sys/mman.h>
 #include <string.h>
 
+// Helper functions
+
+// To be called from native JITed PRT code 
+void jit_print_num(int num) {
+    printf("%d", num);
+    return;
+}
+
 // Testing
 
 void write_native_code(void** native_address, unsigned char* machine_code,  size_t code_size) {
@@ -96,15 +104,19 @@ void native_test(vm_state* state) {
 
     jit_compile(state);
 
+    state->helper_funcs[0] = jit_print_num;
+
     NativeFunc native_add = (NativeFunc)state->native_funcs[NATIVE_ADD];
 
-    int* result = native_add(state->stack + state->sp);
+    int* result = native_add(state->stack + state->sp, state->global_mem, state->helper_funcs);
 
     state->sp = result - state->stack;
 
     if (DEBUG) {
         printf("Stack address returned from native add is: %p\n", result);
         printf("Val at stack head is %d\n", state->stack[0]);
+        print_stack(state);
+        print_global_memory(state);
     }
 
     return;
